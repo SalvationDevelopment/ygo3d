@@ -22,7 +22,7 @@ public class CLIENT
             string ip = System.IO.File.ReadAllText("ip.txt");
             string port = System.IO.File.ReadAllText("port.txt");
             tcpClient = new TcpClient();
-            tcpClient.Connect(ip,int.Parse(port));
+            tcpClient.Connect(ip, int.Parse(port));
             networkStream = tcpClient.GetStream();
             Thread thread = new Thread(new ThreadStart(net_thread));
             thread.IsBackground = true;
@@ -36,12 +36,13 @@ public class CLIENT
 
     private void net_thread()
     {
-        while(is_running){
+        while (is_running)
+        {
             byte[] hdr = networkStreamReadFull(networkStream, 2);
             int plen = BitConverter.ToUInt16(hdr, 0);
             byte[] head = networkStreamReadFull(networkStream, 1);
             byte[] buf = new byte[0];
-            if (plen>1)
+            if (plen > 1)
             {
                 buf = networkStreamReadFull(networkStream, plen - 1);
             }
@@ -70,13 +71,8 @@ public class CLIENT
     {
         try
         {
-            //byte[] params_byte = message.Params.get();
-            //networkStream.Write(BitConverter.GetBytes((UInt16)params_byte.Length + 1), 0, 2);
-            //networkStream.Write(BitConverter.GetBytes((byte)CtosMessage.Response), 0, 1);
-            //networkStream.Write(params_byte, 0, params_byte.Length);
             MemoryStream m = new MemoryStream();
             byte[] params_byte = message.Params.get();
-            //m.Write(BitConverter.GetBytes((UInt16)params_byte.Length + 1), 0, 2);
             m.Write(BitConverter.GetBytes((byte)CtosMessage.Response), 0, 1);
             m.Write(params_byte, 0, params_byte.Length);
             send_duel_buffer_for_ygo_3d(m.ToArray());
@@ -91,14 +87,8 @@ public class CLIENT
     {
         try
         {
-            //byte[] params_byte = message.Params.get();
-            //networkStream.Write(BitConverter.GetBytes((UInt16)params_byte.Length + 1), 0, 2);
-            //networkStream.Write(BitConverter.GetBytes((byte)message.Fuction), 0, 1);
-            //networkStream.Write(params_byte, 0, params_byte.Length);
-
             MemoryStream m = new MemoryStream();
             byte[] params_byte = message.Params.get();
-           // m.Write(BitConverter.GetBytes((UInt16)params_byte.Length + 1), 0, 2);
             m.Write(BitConverter.GetBytes((byte)message.Fuction), 0, 1);
             m.Write(params_byte, 0, params_byte.Length);
             send_duel_buffer_for_ygo_3d(m.ToArray());
@@ -122,12 +112,6 @@ public class CLIENT
             tcpClient = new TcpClient();
             tcpClient.Connect(ip, 11001);
             networkStream = tcpClient.GetStream();
-            bool result=HELPER_TCP.Handshaking(networkStream, 12345678987654321);
-            Debug.Log("Handshaking:"+result);
-            if (result)
-            {
-                debuger_show_bool=false;
-            }
             Thread thread = new Thread(new ThreadStart(net_thread_for_ygo_3d));
             thread.IsBackground = true;
             thread.Start();
@@ -161,21 +145,18 @@ public class CLIENT
         }
         catch (Exception)
         {
-            
+
         }
     }
 
     public void send_duel_buffer_for_ygo_3d(byte[] buffer)
     {
-        var p = protos.Public.Types.Cts.Types.Duel.CreateBuilder();
+        var p = protos.Duel.Types.DataTransfer.CreateBuilder();
         p.Data = Google.ProtocolBuffers.ByteString.CopyFrom(buffer);
         send_buffer_for_ygo_3d(HELPER_TCP.Warper(p.Build()));
-
-        //HELPER_TCP.WritePacket(networkStream, buffer);
     }
     #endregion
 
-    //public CLIENT_SERVANT_OCGCORE servant_ocgcore_debug;
     public CLIENT_SERVANT_DECKMANAGER DeckMaster;
     public CLIENT_SERVANT_ROOM Room;
     public CLIENT_SERVANT_LOGIN Login;
@@ -183,12 +164,10 @@ public class CLIENT
 
     public SHANGCHENG shangcheng;
 
-
-    private DEBUGER debuger;
     public loader loader;
     public bool is_running = true;
     public int time = Environment.TickCount;
-    public GameObject pointed_game_object=null;
+    public GameObject pointed_game_object = null;
     public GameObject preview_pointed_game_object = null;
     public bool left_mouse_button_is_down = false;
     public bool preview_left_mouse_button_is_down = false;
@@ -200,8 +179,7 @@ public class CLIENT
     public PictureLoader picture_loader;
     public Lflist_manager lflist_manager;
     public SETTING setting;
-    int fliter=0;
-    bool debuger_show_bool = false;
+    int fliter = 0;
 
     bool is_in_sharp = false;
 
@@ -219,22 +197,14 @@ public class CLIENT
         {
             networkInitialize_for_ygo_3d();
         }
-      
+
         ini_cameras();
         card_data_manager = new CardDataManager();
         string_data_manager = new string_reader("strings.txt");
         picture_loader = new PictureLoader(this);
         lflist_manager = new Lflist_manager();
-        //servant_ocgcore_debug = new CLIENT_SERVANT_OCGCORE(this);
-        //DeckMaster = new CLIENT_SERVANT_DECKMANAGER(this);
         Room = new CLIENT_SERVANT_ROOM(this);
         setting = new SETTING(this);
-        //Dating = new CLIENT_SERVANT_DATING(this);
-       // shangcheng = new SHANGCHENG(this);
-        if(debuger_show_bool)
-        {
-            debuger = new DEBUGER(this);
-        }
 
         if (is_in_sharp == false)
         {
@@ -242,19 +212,20 @@ public class CLIENT
         }
 
         fit_screen();
-        for (int i = 0; i < 32;i++ )
+        for (int i = 0; i < 32; i++)
         {
-            if(i==15){
+            if (i == 15)
+            {
                 continue;
             }
             fliter |= (int)Math.Pow(2, i);
         }
-       debug_script();
+        debug_script();
     }
 
     private void debug_script()
     {
-        if(is_in_sharp)
+        if (is_in_sharp)
         {
             Room.Link();
             Room.show_all();
@@ -376,14 +347,10 @@ public class CLIENT
         {
             debugger.Log(e);
         }
-        if(DeckMaster!=null)
+        if (DeckMaster != null)
         {
             DeckMaster.fit_screen();
         }
-        //if (servant_ocgcore_debug!=null)
-        //{
-        //    servant_ocgcore_debug.fit_screen();
-        //}
         if (setting != null)
         {
             setting.fit_screen();
@@ -398,7 +365,7 @@ public class CLIENT
         }
     }
 
-    List<HASH_MESSAGE> message_to_be_handled=new List<HASH_MESSAGE>();
+    List<HASH_MESSAGE> message_to_be_handled = new List<HASH_MESSAGE>();
 
     public void update()
     {
@@ -410,7 +377,7 @@ public class CLIENT
             }
             message_to_be_handled.Clear();
         }
-        if (buffers.Count>0)
+        if (buffers.Count > 0)
         {
             lock (buffers)
             {
@@ -421,13 +388,12 @@ public class CLIENT
                 buffers.Clear();
             }
         }
-        if (screen_fixed_time<10)
+        if (screen_fixed_time < 10)
         {
             fit_screen();
             screen_fixed_time++;
         }
         time = Environment.TickCount;
-        /////mouse_pointed_object
         pointed_game_object = null;
         Ray line = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -438,26 +404,19 @@ public class CLIENT
         GameObject hoverobject = UICamera.Raycast(Input.mousePosition) ? UICamera.lastHit.collider.gameObject : null;
         if (hoverobject != null)
         {
-            //debugger.Log("ui event");
             pointed_game_object = hoverobject;
         }
-        /////mouse_position
-        left_mouse_button_is_down=Input.GetMouseButton(0);
-        ///servant_update
-        //if (servant_ocgcore_debug!=null) servant_ocgcore_debug.update();
+        left_mouse_button_is_down = Input.GetMouseButton(0);
         if (DeckMaster != null) DeckMaster.update();
         if (setting != null) setting.update();
-        if (debuger != null) debuger.update();
         if (Room != null) Room.update();
         if (Dating != null) Dating.update();
-        //pre
         preview_pointed_game_object = pointed_game_object;
         preview_left_mouse_button_is_down = left_mouse_button_is_down;
-        ///
-        
+
         mouse_wheel_change_value = Input.GetAxis("Mouse ScrollWheel") * 50;
 
-        if (mouse_wheel_change_value < -10 || mouse_wheel_change_value>10)
+        if (mouse_wheel_change_value < -10 || mouse_wheel_change_value > 10)
         {
             mouse_wheel_change_value = 0;
         }
@@ -467,16 +426,16 @@ public class CLIENT
     private void get_buffer(byte[] p)
     {
 
-        var gilgamesh = protos.Gilgamesh.ParseFrom(p);
+        var gilgamesh = protos.Box.ParseFrom(p);
 
         string type = gilgamesh.Type;
 
         Debug.Log(type);
 
-        if (type == "protos.Public.Stc.Duel")
+        if (type == "protos.Duel.DataTransfer")
         {
             Dating.hide();
-            var message = protos.Public.Types.Stc.Types.Duel.ParseFrom(gilgamesh.Data);
+            var message = protos.Duel.Types.DataTransfer.ParseFrom(gilgamesh.Data);
             var data = message.Data.ToByteArray();
             byte[] hashed_data = new byte[data.Length - 1];
             for (int i = 0; i < hashed_data.Length; i++)
@@ -490,71 +449,62 @@ public class CLIENT
             {
                 message_to_be_handled.Add(hashed_message);
             }
-           
+
         }
 
-
-        if (type == "protos.Public.Stc.LoginResponse")
+        if (type == "protos.Auth.AuthResponse")
         {
-            var message = protos.Public.Types.Stc.Types.LoginResponse.ParseFrom(gilgamesh.Data);
-            var state = message.State;
+            var message = protos.Auth.Types.AuthResponse.ParseFrom(gilgamesh.Data);
+            var state = message.Success;
             var reason = message.Reason;
         }
 
-        if (type == "protos.Public.Chat")
+        if (type == "protos.Chat.Hall")
         {
-            var message = protos.Public.Types.Chat.ParseFrom(gilgamesh.Data);
-            Dating.liaotian.GetComponent<lazy_chat>().chat_list.Add(message.From + ":" + message.Msg);
+            var message = protos.Chat.Types.Hall.ParseFrom(gilgamesh.Data);
+            Dating.liaotian.GetComponent<lazy_chat>().chat_list.Add(message.Account + ":" + message.Content);
         }
 
-        if (type == "protos.Public.Stc.Player.QueryResponse")
+        if (type == "protos.Hall.YouEnter")
         {
-            //var message = protos.Public.Types.Stc.Types.Player.Types.QueryResponse.ParseFrom(gilgamesh.Data);
-        }
-
-        if (type == "protos.Public.Stc.Hall.YouEnterHall")
-        {
-            var message = protos.Public.Types.Stc.Types.Hall.Types.YouEnterHall.ParseFrom(gilgamesh.Data);
+            var message = protos.Hall.Types.YouEnter.ParseFrom(gilgamesh.Data);
             Login.kill_oneself();
             Login = null;
             Dating = new CLIENT_SERVANT_DATING(this);
             Dating.fit_screen();
         }
 
-        if (type == "protos.Public.Stc.Hall.RoomList")
+        if (type == "protos.Hall.RoomList")
         {
-            var message = protos.Public.Types.Stc.Types.Hall.Types.RoomList.ParseFrom(gilgamesh.Data);
-            for (int i = 0; i < message.RoomList_List.Count;i++ )
+            var message = protos.Hall.Types.RoomList.ParseFrom(gilgamesh.Data);
+            for (int i = 0; i < message.ListList.Count; i++)
             {
-                to_room(message.RoomList_List[i]);
+                to_room(message.ListList[i]);
             }
         }
-        if (type == "protos.Public.Stc.Hall.RoomDestoried")
+        if (type == "protos.Hall.RoomDead")
         {
-            var message = protos.Public.Types.Stc.Types.Hall.Types.RoomDestoried.ParseFrom(gilgamesh.Data);
+            var message = protos.Hall.Types.RoomDead.ParseFrom(gilgamesh.Data);
             Dating.del_one_room((int)message.Id);
         }
-        if (type == "protos.Public.Stc.Hall.RoomStateChanged")
+        if (type == "protos.Hall.RoomStateChanged")
         {
-            var message = protos.Public.Types.Stc.Types.Hall.Types.RoomStateChanged.ParseFrom(gilgamesh.Data);
+            var message = protos.Hall.Types.RoomStateChanged.ParseFrom(gilgamesh.Data);
             to_room(message.Room);
         }
 
-        if (type == "protos.Public.Stc.Hall.RoomCreated")
+        if (type == "protos.Hall.RoomCreated")
         {
-            var message = protos.Public.Types.Stc.Types.Hall.Types.RoomCreated.ParseFrom(gilgamesh.Data);
-           
+            var message = protos.Hall.Types.RoomCreated.ParseFrom(gilgamesh.Data);
             to_room(message.Room);
         }
-        
-
     }
 
-    private void to_room(protos.Public.Types.Room room)
+    private void to_room(protos.Common.Types.Room room)
     {
         string name = "";
         name += room.Option.Name;
-        if (room.State == protos.Public.Types.RoomState.Duel)
+        if (room.State == protos.Common.Types.RoomState.Duel)
         {
             name += " 决斗中";
         }
@@ -570,9 +520,6 @@ public class CLIENT
         Dating.to_a_room((int)room.Id, name);
         Debug.Log("Dating.to_a_room((int)message.Room.Id, name);");
     }
-
-
-
 
     public void get_message(HASH_MESSAGE message)
     {

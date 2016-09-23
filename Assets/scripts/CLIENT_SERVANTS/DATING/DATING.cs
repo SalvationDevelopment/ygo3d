@@ -32,9 +32,8 @@ public class CLIENT_SERVANT_DATING
     void on_chat()
     {
         string send_str = liaotian.GetComponent<lazy_chat>().input.value;
-        var p = protos.Public.Types.Chat.CreateBuilder();
-        p.From = client.name;
-        p.Msg = send_str;
+        var p = protos.Chat.Types.HallRequest.CreateBuilder();
+        p.Content = send_str;
         client.send_buffer_for_ygo_3d(HELPER_TCP.Warper(p.Build()));
         liaotian.GetComponent<lazy_chat>().input.value = "";
     }
@@ -92,46 +91,46 @@ public class CLIENT_SERVANT_DATING
 
     void on_click_create_single_room()
     {
-        var p = protos.Public.Types.Cts.Types.Hall.Types.CreateRoom.CreateBuilder();
-        var option = protos.Public.Types.RoomOption.CreateBuilder();
+        var p = protos.Hall.Types.CreateRoomRequest.CreateBuilder();
+        var option = protos.Common.Types.RoomOption.CreateBuilder();
         option.Name = "单局房间";
         option.Password = "";
         option.Lp =8000;
         option.LFList = 0;
         option.HandCount = 5;
         option.DrawCount = 1;
-        option.Mode = protos.Public.Types.RoomMode.Single;
-        option.Rule = protos.Public.Types.RoomRule.OcgTcg;
+        option.Mode = protos.Common.Types.RoomMode.Single;
+        option.Rule = protos.Common.Types.RoomRule.OcgTcg;
         p.Option = option.Build();
         client.send_buffer_for_ygo_3d(HELPER_TCP.Warper(p.Build()));
     }
     void on_click_create_match_room()
     {
-        var p = protos.Public.Types.Cts.Types.Hall.Types.CreateRoom.CreateBuilder();
-        var option = protos.Public.Types.RoomOption.CreateBuilder();
+        var p = protos.Hall.Types.CreateRoomRequest.CreateBuilder();
+        var option = protos.Common.Types.RoomOption.CreateBuilder();
         option.Name = "比赛房间";
         option.Password = "";
         option.Lp = 8000;
         option.LFList = 0;
         option.HandCount = 5;
         option.DrawCount = 1;
-        option.Mode = protos.Public.Types.RoomMode.Match;
-        option.Rule = protos.Public.Types.RoomRule.OcgTcg;
+        option.Mode = protos.Common.Types.RoomMode.Match;
+        option.Rule = protos.Common.Types.RoomRule.OcgTcg;
         p.Option = option.Build();
         client.send_buffer_for_ygo_3d(HELPER_TCP.Warper(p.Build()));
     }
     void on_click_create_tag_room()
     {
-        var p = protos.Public.Types.Cts.Types.Hall.Types.CreateRoom.CreateBuilder();
-        var option = protos.Public.Types.RoomOption.CreateBuilder();
+        var p = protos.Hall.Types.CreateRoomRequest.CreateBuilder();
+        var option = protos.Common.Types.RoomOption.CreateBuilder();
         option.Name = "tag房间";
         option.Password = "";
         option.Lp = 16000;
         option.LFList = 0;
         option.HandCount = 5;
         option.DrawCount = 1;
-        option.Mode = protos.Public.Types.RoomMode.Tag;
-        option.Rule = protos.Public.Types.RoomRule.OcgTcg;
+        option.Mode = protos.Common.Types.RoomMode.Tag;
+        option.Rule = protos.Common.Types.RoomRule.OcgTcg;
         p.Option = option.Build();
         client.send_buffer_for_ygo_3d(HELPER_TCP.Warper(p.Build()));
     }
@@ -312,7 +311,7 @@ public class CLIENT_SERVANT_DATING
             {
                 if (rooms[i].object_.name == ptr.ToString())
                 {
-                    var p = protos.Public.Types.Cts.Types.Hall.Types.EnterRoom.CreateBuilder();
+                    var p = protos.Hall.Types.EnterRoomRequest.CreateBuilder();
                     p.Id = (ulong)rooms[i].ptr;
                     p.Password = "";
                     client.send_buffer_for_ygo_3d(HELPER_TCP.Warper(p.Build()));
@@ -323,48 +322,6 @@ public class CLIENT_SERVANT_DATING
 
     void debug()
     {
-        //hashed_room_on_list one_room = new hashed_room_on_list();
-        //one_room.name = "babababbabababbababaababaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-        //one_room.ptr = 10010;
-        //add_one_room(one_room);
-        //refresh_all_room();
-        //one_room = new hashed_room_on_list();
-        //one_room.name = "babababbabababbababaababaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-        //one_room.ptr = 10010;
-        //add_one_room(one_room);
-        //one_room = new hashed_room_on_list();
-        //one_room.name = "babababbabababbababaababaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-        //one_room.ptr = 10010;
-        //add_one_room(one_room);
-        //one_room = new hashed_room_on_list();
-        //one_room.name = "babababbabababbababaababaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-        //one_room.ptr = 10010;
-        //add_one_room(one_room);
-        //one_room = new hashed_room_on_list();
-        //one_room.name = "babababbabababbababaababaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-        //one_room.ptr = 10010;
-        //add_one_room(one_room);
-        //one_room = new hashed_room_on_list();
-        //one_room.name = "babababbabababbababaababaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-        //one_room.ptr = 10010;
-        //add_one_room(one_room);
-        //one_room = new hashed_room_on_list();
-        //one_room.name = "babababbabababbababaababaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-        //one_room.ptr = 10010;
-        //add_one_room(one_room);
-        //one_room = new hashed_room_on_list();
-        //one_room.name = "babababbabababbababaababaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-        //one_room.ptr = 10010;
-        //add_one_room(one_room);
-        //one_room = new hashed_room_on_list();
-        //one_room.name = "babababbabababbababaababaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-        //one_room.ptr = 10010;
-        //add_one_room(one_room);
-        //one_room = new hashed_room_on_list();
-        //one_room.name = "babababbabababbababaababaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-        //one_room.ptr = 10010;
-        //add_one_room(one_room);
-        //refresh_all_room();
     }
 }
 

@@ -66,7 +66,7 @@ public class CardDataManager
                             }
                             CardDatas.Add(c);
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
 
                         }
@@ -126,7 +126,7 @@ public class CardDataManager
         CardData card = new CardData();
         card.code = 0;
         card.Name = "预留广告位";
-        card.Desc = "广告请联系qq:3532115948";
+        card.Desc = "广告请联系qq:1159023394";
         if (id > 0) for (int i = 0; i < 10; i++)
             {
                 foreach (CardData one_CardData in CardDatas)
@@ -341,7 +341,7 @@ public class CardDataManager
         {
             re += GetById(code).Str[index];
         }
-        catch (Exception e)
+        catch (Exception)
         {
 
         }
