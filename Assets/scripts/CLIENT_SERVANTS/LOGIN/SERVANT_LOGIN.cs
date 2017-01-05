@@ -99,23 +99,19 @@ public class CLIENT_SERVANT_LOGIN
             string name = regist_window.name.value;
             string psw = regist_window.psw1.value;
             TcpClient client = new TcpClient();
-            client.Connect(father.ip,11000);
-            var bu=protos.Public.Types.Cts.Types.Register.CreateBuilder();
+            client.Connect(father.ip, 11001);
+            var bu = protos.Auth.Types.RegisterRequest.CreateBuilder();
             bu.Account = name;
-            bu.Password = Google.ProtocolBuffers.ByteString.CopyFrom(HELPER_TCP.HashString(psw));
-            byte[] buffer = bu.Build().ToByteArray();
+            bu.Password = Google.ProtocolBuffers.ByteString.CopyFrom(HELPER_TCP.ToMd5String(psw));
             NetworkStream stream = client.GetStream();
-            if (HELPER_TCP.Handshaking(stream, 12345678987654321))
+
+            HELPER_TCP.WritePacket(stream, HELPER_TCP.Warper(bu.Build()));
+            byte[] huiying = HELPER_TCP.ReadPacket(stream);
+            var h = protos.Auth.Types.RegisterResponse.ParseFrom(huiying);
+            if (h.Success == true)
             {
-                HELPER_TCP.WritePacket(stream, buffer);
-                byte[] huiying = HELPER_TCP.ReadPacket(stream);
-                var h = protos.Public.Types.Stc.Types.LoginResponse.ParseFrom(huiying);
-                if (h.State == true)
-                {
-                    regist_on_quxiao();
-                }
+                regist_on_quxiao();
             }
-           
         }
     }
 

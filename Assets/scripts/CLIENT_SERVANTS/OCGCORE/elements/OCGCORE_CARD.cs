@@ -1159,19 +1159,19 @@ public class OCGCORE_CARD
         if ((data.Type&(int)game_type.TYPE_MONSTER)>0)
         {
             Color tcl = Color.yellow;
-            Color.TryParseHexString("ff8000", out tcl);
+            ColorUtility.TryParseHtmlString("ff8000", out tcl);
             flash_line.GetComponent<FlashingController>().flashingStartColor = tcl;
         }
         if ((data.Type & (int)game_type.TYPE_SPELL) > 0)
         {
             Color tcl = Color.yellow;
-            Color.TryParseHexString("7fff00", out tcl);
+            ColorUtility.TryParseHtmlString("7fff00", out tcl);
             flash_line.GetComponent<FlashingController>().flashingStartColor = tcl;
         }
         if ((data.Type & (int)game_type.TYPE_TRAP) > 0)
         {
             Color tcl = Color.yellow;
-            Color.TryParseHexString("dda0dd", out tcl);
+            ColorUtility.TryParseHtmlString("dda0dd", out tcl);
             flash_line.GetComponent<FlashingController>().flashingStartColor = tcl;
         }
     }
